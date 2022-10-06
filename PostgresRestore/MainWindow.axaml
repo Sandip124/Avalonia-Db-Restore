@@ -5,15 +5,17 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450" Width="600" Height="450"
         x:Class="PostgresRestore.MainWindow"
         Title="Postgres Restore Service"
-        ExtendClientAreaToDecorationsHint="False"
+        ExtendClientAreaToDecorationsHint="true"
         CanResize="False"
+        Icon="resm:PostgresRestore.Assets.database.ico"
         WindowStartupLocation="CenterScreen"
+        CornerRadius="8"
         Background="White">
 
     <DockPanel>
         <DockPanel Dock="Top">
             <StackPanel>
-                <Border Padding="5 10" Background="#364fc7">
+                <Border Padding="5 10" Background="#364fc7" x:Name="Header" PointerMoved="Header_OnPointerMoved" PointerPressed="Header_OnPointerPressed" PointerReleased="Header_OnPointerReleased">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Height="58" Width="58" Background="#fff" CornerRadius="16" Margin="10 0 10 0">
                             <PathIcon Width="32" Height="32" Foreground="#364fc7"
@@ -25,8 +27,9 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
+                <ProgressBar Width="600" Value="0" Background="#fff" CornerRadius="0"  x:Name="ProgressBar" ></ProgressBar>
 
-                <Border Padding="15">
+                <Border Padding="15" Background="White">
                     <Grid RowDefinitions="* * * * * * *" ColumnDefinitions="120 *">
                         <TextBlock Grid.Row="0" Grid.Column="0" Margin="0 5" FontFamily="Inter">Postgres User: </TextBlock>
                         <TextBox Grid.Row="0" Grid.Column="1" Margin="0 5" x:Name="PostgresUsername">postgres</TextBox>
@@ -34,7 +37,6 @@
                         <TextBlock Grid.Row="1" Grid.Column="0" Margin="0 5" FontFamily="Inter" >Password: </TextBlock>
                         <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*" ColumnDefinitions="* Auto" Margin="0 5">
                             <TextBox  x:Name="PostgresPassword">root</TextBox>
-                            <CheckBox Grid.Column="1" Margin="5 0 0 0" FontFamily="Inter" Checked="OnPasswordRemember"> Remember</CheckBox>
                         </Grid>
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Margin="0 5" FontFamily="Inter">Database:</TextBlock>
@@ -82,7 +84,7 @@
 
                         <Button Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="50"
-                                Margin="0 10" FontSize="16" Click="Restore">
+                                Margin="0 10" FontSize="16" Click="Restore" x:Name="RestoreButton">
                             <Button.Styles>
                                 <Style Selector="Button">
                                     <Setter Property="Background" Value="#4263eb" />
@@ -98,13 +100,11 @@
                             <StackPanel Orientation="Horizontal">
                                 <PathIcon Width="24" Height="24" Foreground="#fff"
                                           Data="{StaticResource Restore}" />
-                                <TextBlock VerticalAlignment="Center" Foreground="#fff" Margin="5 0"  FontFamily="Inter">Restore</TextBlock>
+                                <TextBlock VerticalAlignment="Center" Foreground="#fff" Margin="5 0"  FontFamily="Inter" x:Name="RestoreText">Restore</TextBlock>
                             </StackPanel>
                         </Button>
                     </Grid>
                 </Border>
-
-<ProgressBar Width="500" Height="5" Value="0"  x:Name="ProgressBar" ></ProgressBar>
             </StackPanel>
         </DockPanel>
     </DockPanel>

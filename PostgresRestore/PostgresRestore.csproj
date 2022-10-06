@@ -24,12 +24,16 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
         <PackageReference Include="MessageBox.Avalonia" Version="2.1.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Validator" />
+      <None Remove="Assets\database.png" />
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Assets\database.png" />
+      <None Remove="Assets\database.ico" />
+      <EmbeddedResource Include="Assets\database.ico">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 </Project>

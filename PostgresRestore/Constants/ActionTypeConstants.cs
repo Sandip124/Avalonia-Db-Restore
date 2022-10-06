@@ -16,4 +16,5 @@ internal class CommandTypeConstants
 internal class PostgresConstants
 {
     public const string PasswordKey = "PGPASSWORD";
+    public const string UserKey = "PGUSER";
 }
