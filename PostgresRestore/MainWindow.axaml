@@ -25,6 +25,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
+                <ProgressBar Width="600" Value="0" Background="#fff" CornerRadius="0"  x:Name="ProgressBar" ></ProgressBar>
 
                 <Border Padding="15">
                     <Grid RowDefinitions="* * * * * * *" ColumnDefinitions="120 *">
@@ -98,13 +99,11 @@
                             <StackPanel Orientation="Horizontal">
                                 <PathIcon Width="24" Height="24" Foreground="#fff"
                                           Data="{StaticResource Restore}" />
-                                <TextBlock VerticalAlignment="Center" Foreground="#fff" Margin="5 0"  FontFamily="Inter">Restore</TextBlock>
+                                <TextBlock VerticalAlignment="Center" Foreground="#fff" Margin="5 0"  FontFamily="Inter" x:Name="RestoreText">Restore</TextBlock>
                             </StackPanel>
                         </Button>
                     </Grid>
                 </Border>
-
-<ProgressBar Width="500" Height="5" Value="0"  x:Name="ProgressBar" ></ProgressBar>
             </StackPanel>
         </DockPanel>
     </DockPanel>
