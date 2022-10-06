@@ -9,7 +9,19 @@ public static class CommandExecutor
 {
     public static void Execute(string commandType, string user, string database)
     {
-        ExecuteCommand("psql", $@"-U {user} -c ""{commandType} database """"{database}""""");
+        var fileName = "psql";
+        var arguments = $"-U {user} -c \"{commandType} database \"\"{database}\"\"\"";
+
+        var process = ExecuteCommand(fileName, arguments);
+        process.Start();
+        var error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
+        {
+            process.Close();
+            throw new Exception(error);
+        }
+        process.Close();
     }
 
     public static void ExecuteRestore(UserConnectionVo connection)
@@ -26,8 +38,8 @@ public static class CommandExecutor
                 break;
         }
 
-        string arguments;
         string fileName;
+        string arguments;
         if (connection.DatabaseBackupType == CommandTypeConstants.PgDump)
         {
             fileName = "psql";
@@ -41,11 +53,20 @@ public static class CommandExecutor
                 $@"-U {connection.UserName} -d ""{connection.DatabaseName}"" ""{connection.RestoreFileLocation}""";
         }
 
-        ExecuteCommand(fileName, arguments);
+        var process = ExecuteCommand(fileName, arguments);
+        process.Start();
+        var error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
+        {
+            process.Close();
+            throw new Exception(error);
+        }
+        process.Close();
     }
 
 
-    private static void ExecuteCommand(string fileName, string arguments)
+    private static Process ExecuteCommand(string fileName, string arguments)
     {
         var proc = new Process();
         proc.StartInfo.FileName = fileName;
@@ -54,15 +75,6 @@ public static class CommandExecutor
         proc.StartInfo.RedirectStandardError = true;
         proc.StartInfo.UseShellExecute = false;
         proc.StartInfo.CreateNoWindow = true;
-        proc.Start();
-        var error = proc.StandardError.ReadToEnd();
-        proc.WaitForExit();
-        if (proc.ExitCode != 0)
-        {
-            proc.Close();
-            throw new Exception("Error restoring database: " + error);
-        }
-
-        proc.Close();
+        return proc;
     }
 }

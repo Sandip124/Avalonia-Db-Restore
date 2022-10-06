@@ -5,15 +5,17 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450" Width="600" Height="450"
         x:Class="PostgresRestore.MainWindow"
         Title="Postgres Restore Service"
-        ExtendClientAreaToDecorationsHint="False"
+        ExtendClientAreaToDecorationsHint="true"
         CanResize="False"
+        Icon="resm:PostgresRestore.Assets.database.ico"
         WindowStartupLocation="CenterScreen"
+        CornerRadius="8"
         Background="White">
 
     <DockPanel>
         <DockPanel Dock="Top">
             <StackPanel>
-                <Border Padding="5 10" Background="#364fc7">
+                <Border Padding="5 10" Background="#364fc7" x:Name="Header" PointerMoved="Header_OnPointerMoved" PointerPressed="Header_OnPointerPressed" PointerReleased="Header_OnPointerReleased">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Height="58" Width="58" Background="#fff" CornerRadius="16" Margin="10 0 10 0">
                             <PathIcon Width="32" Height="32" Foreground="#364fc7"
@@ -27,7 +29,7 @@
                 </Border>
                 <ProgressBar Width="600" Value="0" Background="#fff" CornerRadius="0"  x:Name="ProgressBar" ></ProgressBar>
 
-                <Border Padding="15">
+                <Border Padding="15" Background="White">
                     <Grid RowDefinitions="* * * * * * *" ColumnDefinitions="120 *">
                         <TextBlock Grid.Row="0" Grid.Column="0" Margin="0 5" FontFamily="Inter">Postgres User: </TextBlock>
                         <TextBox Grid.Row="0" Grid.Column="1" Margin="0 5" x:Name="PostgresUsername">postgres</TextBox>
@@ -35,7 +37,6 @@
                         <TextBlock Grid.Row="1" Grid.Column="0" Margin="0 5" FontFamily="Inter" >Password: </TextBlock>
                         <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*" ColumnDefinitions="* Auto" Margin="0 5">
                             <TextBox  x:Name="PostgresPassword">root</TextBox>
-                            <CheckBox Grid.Column="1" Margin="5 0 0 0" FontFamily="Inter" Checked="OnPasswordRemember"> Remember</CheckBox>
                         </Grid>
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Margin="0 5" FontFamily="Inter">Database:</TextBlock>

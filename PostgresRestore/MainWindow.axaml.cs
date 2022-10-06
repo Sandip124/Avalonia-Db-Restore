@@ -2,11 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using AvaloniaEdit.Highlighting;
 using MessageBox.Avalonia.Enums;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PostgresRestore.Constants;
 using PostgresRestore.Helper;
+using PostgresRestore.Validator;
 using PostgresRestore.Vo;
 
 namespace PostgresRestore
@@ -17,11 +23,6 @@ namespace PostgresRestore
         {
             InitializeComponent();
             LoadCombobox();
-            LoadInitialData();
-        }
-
-        private void LoadInitialData()
-        {
         }
 
         private void LoadCombobox()
@@ -29,26 +30,25 @@ namespace PostgresRestore
             var actionCombobox = this.Find<ComboBox>("ActionComboBox");
             actionCombobox.Items = new List<object>()
             {
-                new { Name = Constants.ActionTypeConstants.CreateAndRestore },
-                new { Name = Constants.ActionTypeConstants.DropAndRestore }
+                new { Name = ActionTypeConstants.CreateAndRestore },
+                new { Name = ActionTypeConstants.DropAndRestore }
             };
             actionCombobox.SelectedIndex = 0;
         }
 
-        private bool isRestoring = false;
+        private bool _isRestoring;
 
         private void Restore(object? sender, RoutedEventArgs e)
         {
-            if (isRestoring) return;
+            if (_isRestoring) return;
             var progressbar = this.Find<ProgressBar>("ProgressBar");
             var restoreText = this.Find<TextBlock>("RestoreText");
             try
             {
-                isRestoring = true;
+                _isRestoring = true;
                 restoreText.Text = "Restoring";
                 progressbar.Value = 20;
                 progressbar.IsIndeterminate = true;
-                PersistPostgresCredentials();
 
                 var databaseUsername = this.Find<TextBox>("PostgresUsername");
                 var databasePassword = this.Find<TextBox>("PostgresPassword");
@@ -63,13 +63,13 @@ namespace PostgresRestore
                     Password = databasePassword.Text,
                     DatabaseName = databaseName.Text,
                     DatabaseBackupType = pgRestore.IsChecked ?? false
-                        ? Constants.CommandTypeConstants.PgRestore
-                        : Constants.CommandTypeConstants.PgDump,
+                        ? CommandTypeConstants.PgRestore
+                        : CommandTypeConstants.PgDump,
                     ActionTypeValue = backupType.SelectedIndex == 0
-                        ? Constants.ActionTypeConstants.CreateAndRestore
-                        : Constants.ActionTypeConstants.DropAndRestore,
+                        ? ActionTypeConstants.CreateAndRestore
+                        : ActionTypeConstants.DropAndRestore,
                     RestoreFileLocation = restoreFileLocation.Text
-                };
+                }.Validate();
 
                 var bgw = new BackgroundWorker();
 
@@ -77,29 +77,30 @@ namespace PostgresRestore
 
                 bgw.RunWorkerCompleted += (_, args) =>
                 {
-                    try
+                    if (args.Error == null)
                     {
-                        if (args.Error != null) return;
                         MessageBox.Avalonia.MessageBoxManager
                             .GetMessageBoxStandardWindow("Success",
-                                $"Database #{databaseName.Text} restored successfully", ButtonEnum.Ok,
-                                MessageBox.Avalonia.Enums.Icon.Info).Show();
-                        restoreText.Text = "Restore";
-                        progressbar.Value = 0;
-                        progressbar.Background = Brushes.White;
-                        progressbar.IsIndeterminate = false;
+                                $"Database '{databaseName.Text}' restored successfully", ButtonEnum.Ok,
+                                MessageBox.Avalonia.Enums.Icon.Success).Show();
+                        
+                        restoreFileLocation.Text = string.Empty;
+                        databaseName.Text = string.Empty;
+
                     }
-                    catch (Exception exception)
+                    else
                     {
                         MessageBox.Avalonia.MessageBoxManager
                             .GetMessageBoxStandardWindow("Error",
-                                exception.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info).Show();
+                                args.Error?.Message ?? "Error during operation", ButtonEnum.Ok, MessageBox.Avalonia
+                                    .Enums.Icon.Error).Show();
                     }
-                    finally
-                    {
-                        isRestoring = false;
-                        FinalizeLoadingFinished();
-                    }
+                    
+                    restoreText.Text = "Restore";
+                    progressbar.Value = 0;
+                    progressbar.Background = Brushes.White;
+                    progressbar.IsIndeterminate = false;
+                    _isRestoring = false;
                 };
                 bgw.RunWorkerAsync();
             }
@@ -109,19 +110,15 @@ namespace PostgresRestore
                     .GetMessageBoxStandardWindow("Error",
                         exception.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info).Show();
             }
-        }
-
-        private void FinalizeLoadingFinished()
-        {
-        }
-
-        private void PersistPostgresCredentials()
-        {
+            finally
+            {
+                Environment.SetEnvironmentVariable(PostgresConstants.PasswordKey, string.Empty);
+            }
         }
 
         private async void BrowseBackUpFile(object? sender, RoutedEventArgs e)
         {
-            if (isRestoring) return;
+            if (_isRestoring) return;
 
             var fileBrowser = new OpenFileDialog
             {
@@ -142,10 +139,32 @@ namespace PostgresRestore
                 databaseTextBox.Text = databaseName?.Split('_').FirstOrDefault();
             }
         }
+        
+        private PixelPoint _lastLocation;
+        private bool _mouseDown;
+        
 
-        private void OnPasswordRemember(object? sender, RoutedEventArgs e)
+        private void Header_OnPointerMoved(object? sender, PointerEventArgs e)
         {
-            //for now nothing happens
+            if (_mouseDown)
+            {
+                var xPosition = Position.X - _lastLocation.X + e.GetPosition(this).X;
+                var yPosition = Position.Y - _lastLocation.Y + e.GetPosition(this).Y;
+                Position = new PixelPoint(
+                    (int)xPosition, (int)yPosition);
+            }
+        }
+        
+        private void Header_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+        {
+            _mouseDown = false;
+        }
+
+        private void Header_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            _mouseDown = true;
+            var point = e.GetPosition(this);
+            _lastLocation = new PixelPoint((int)point.X,(int)point.Y);
         }
     }
 }
