@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450" Width="600" Height="450"
+        x:Class="PostgresRestore.MainWindow"
+        Title="Postgres Restore Service"
+        ExtendClientAreaToDecorationsHint="False"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Background="White">
+
+    <DockPanel>
+        <DockPanel Dock="Top">
+            <StackPanel>
+                <Border Padding="5 10" Background="#364fc7">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Height="58" Width="58" Background="#fff" CornerRadius="16" Margin="10 0 10 0">
+                            <PathIcon Width="32" Height="32" Foreground="#364fc7"
+                                      Data="{StaticResource Database}" />
+                        </Border>
+                        <StackPanel Margin="0 5 0 0">
+                            <TextBlock FontSize="16" Foreground="#fff" FontFamily="Inter">Postgres</TextBlock>
+                            <TextBlock FontSize="24" FontWeight="Bold" Foreground="#fff" FontFamily="Inter">DATABASE RESTORE SERVICE</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Padding="15">
+                    <Grid RowDefinitions="* * * * * * *" ColumnDefinitions="120 *">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Margin="0 5" FontFamily="Inter">Postgres User: </TextBlock>
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="0 5" x:Name="PostgresUsername">postgres</TextBox>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="0 5" FontFamily="Inter" >Password: </TextBlock>
+                        <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*" ColumnDefinitions="* Auto" Margin="0 5">
+                            <TextBox  x:Name="PostgresPassword">root</TextBox>
+                            <CheckBox Grid.Column="1" Margin="5 0 0 0" FontFamily="Inter" Checked="OnPasswordRemember"> Remember</CheckBox>
+                        </Grid>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Margin="0 5" FontFamily="Inter">Database:</TextBlock>
+                        <TextBox Grid.Row="2" Grid.Column="1" Margin="0 5" x:Name="DatabaseName"></TextBox>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Margin="0 5" FontFamily="Inter">Type:</TextBlock>
+                        <Grid Grid.Row="3" Grid.Column="1" Margin="0" ColumnDefinitions="* *">
+                            <RadioButton x:Name="TypePgRestore" Grid.Row="0" Grid.Column="0" Margin="0 5" FontFamily="Inter" IsChecked="True">PG RESTORE</RadioButton>
+                            <RadioButton x:Name="TypePgDump" Grid.Row="0" Grid.Column="1" Margin="0 5" FontFamily="Inter"> PG DUMP</RadioButton>
+                        </Grid>
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Margin="0 5" FontFamily="Inter">Action:</TextBlock>
+                        <ComboBox Grid.Row="4" Grid.Column="1" Margin="0 5" MinWidth="450" x:Name="ActionComboBox"
+                                  SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontFamily="Inter" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Margin="0 5" FontFamily="Inter">File</TextBlock>
+                        <Grid Grid.Row="5" Grid.Column="1" RowDefinitions="*" ColumnDefinitions="* Auto" Margin="0 5">
+                            <TextBox x:Name="FileTextBox"></TextBox>
+                            <Button Grid.Column="1" Margin="5 0 0 0" Click="BrowseBackUpFile">
+                                <Button.Styles>
+                                    <Style Selector="Button">
+                                        <Setter Property="Background" Value="#4263eb" />
+                                    </Style>
+                                    <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                        <Setter Property="Background" Value="#364fc7" />
+                                    </Style>
+                                    <Style Selector="Button:pressed /template/ ContentPresenter">
+                                        <Setter Property="Background" Value="#364fc7" />
+                                    </Style>
+                                </Button.Styles>
+                                <StackPanel Orientation="Horizontal">
+                                    <PathIcon Width="16" Height="20" Foreground="#fff"
+                                              Data="{StaticResource Folder}" />
+                                    <TextBlock Foreground="#fff" VerticalAlignment="Center" Margin="5 0" FontFamily="Inter">Browse</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <Button Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="50"
+                                Margin="0 10" FontSize="16" Click="Restore">
+                            <Button.Styles>
+                                <Style Selector="Button">
+                                    <Setter Property="Background" Value="#4263eb" />
+                                </Style>
+                                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="#364fc7" />
+                                </Style>
+                                <Style Selector="Button:pressed /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="#364fc7" />
+                                </Style>
+                            </Button.Styles>
+                            
+                            <StackPanel Orientation="Horizontal">
+                                <PathIcon Width="24" Height="24" Foreground="#fff"
+                                          Data="{StaticResource Restore}" />
+                                <TextBlock VerticalAlignment="Center" Foreground="#fff" Margin="5 0"  FontFamily="Inter">Restore</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+
+<ProgressBar Width="500" Height="5" Value="0"  x:Name="ProgressBar" ></ProgressBar>
+            </StackPanel>
+        </DockPanel>
+    </DockPanel>
+</Window>

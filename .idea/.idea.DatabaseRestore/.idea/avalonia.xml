@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="PostgresRestore/App.axaml" value="PostgresRestore/PostgresRestore.csproj" />
+        <entry key="PostgresRestore/Icons.axaml" value="PostgresRestore/PostgresRestore.csproj" />
+        <entry key="PostgresRestore/MainWindow.axaml" value="PostgresRestore/PostgresRestore.csproj" />
+        <entry key="PostgresRestore/Resources.axaml" value="PostgresRestore/PostgresRestore.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
