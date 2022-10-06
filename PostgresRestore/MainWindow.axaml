@@ -84,7 +84,7 @@
 
                         <Button Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="50"
-                                Margin="0 10" FontSize="16" Click="Restore">
+                                Margin="0 10" FontSize="16" Click="Restore" x:Name="RestoreButton">
                             <Button.Styles>
                                 <Style Selector="Button">
                                     <Setter Property="Background" Value="#4263eb" />

@@ -43,13 +43,9 @@ namespace PostgresRestore
             if (_isRestoring) return;
             var progressbar = this.Find<ProgressBar>("ProgressBar");
             var restoreText = this.Find<TextBlock>("RestoreText");
+            var restoreButton = this.Find<Button>("RestoreButton");
             try
             {
-                _isRestoring = true;
-                restoreText.Text = "Restoring";
-                progressbar.Value = 20;
-                progressbar.IsIndeterminate = true;
-
                 var databaseUsername = this.Find<TextBox>("PostgresUsername");
                 var databasePassword = this.Find<TextBox>("PostgresPassword");
                 var databaseName = this.Find<TextBox>("DatabaseName");
@@ -70,10 +66,21 @@ namespace PostgresRestore
                         : ActionTypeConstants.DropAndRestore,
                     RestoreFileLocation = restoreFileLocation.Text
                 }.Validate();
-
+                
+                _isRestoring = true;
+                restoreText.Text = "Restoring";
+                progressbar.Value = 20;
+                progressbar.IsIndeterminate = true;
+                restoreButton.IsEnabled = false;
+                restoreFileLocation.IsEnabled = false;
+                
                 var bgw = new BackgroundWorker();
+                bgw.WorkerSupportsCancellation = true;
 
-                bgw.DoWork += (_, _) => { CommandExecutor.ExecuteRestore(connection); };
+                bgw.DoWork += (_, _) =>
+                {
+                    CommandExecutor.ExecuteRestore(connection);
+                };
 
                 bgw.RunWorkerCompleted += (_, args) =>
                 {
@@ -100,6 +107,8 @@ namespace PostgresRestore
                     progressbar.Value = 0;
                     progressbar.Background = Brushes.White;
                     progressbar.IsIndeterminate = false;
+                    restoreButton.IsEnabled = true;
+                    restoreFileLocation.IsEnabled = true;
                     _isRestoring = false;
                 };
                 bgw.RunWorkerAsync();
