@@ -19,6 +19,10 @@ namespace PostgresRestore
 {
     public partial class MainWindow : Window
     {
+        private bool _isRestoring;    
+        private PixelPoint _lastLocation;
+        private bool _mouseDown;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,11 +40,8 @@ namespace PostgresRestore
             actionCombobox.SelectedIndex = 0;
         }
 
-        private bool _isRestoring;
-
         private void Restore(object? sender, RoutedEventArgs e)
         {
-            if (_isRestoring) return;
             var progressbar = this.Find<ProgressBar>("ProgressBar");
             var restoreText = this.Find<TextBlock>("RestoreText");
             var restoreButton = this.Find<Button>("RestoreButton");
@@ -66,9 +67,10 @@ namespace PostgresRestore
                         : ActionTypeConstants.DropAndRestore,
                     RestoreFileLocation = restoreFileLocation.Text
                 }.Validate();
-                
+            
+                if (_isRestoring) return;  
                 _isRestoring = true;
-                restoreText.Text = "Restoring";
+                restoreText.Text = "Restoring...";
                 progressbar.Value = 20;
                 progressbar.IsIndeterminate = true;
                 restoreButton.IsEnabled = false;
@@ -147,11 +149,7 @@ namespace PostgresRestore
             {
                 databaseTextBox.Text = databaseName?.Split('_').FirstOrDefault();
             }
-        }
-        
-        private PixelPoint _lastLocation;
-        private bool _mouseDown;
-        
+        }        
 
         private void Header_OnPointerMoved(object? sender, PointerEventArgs e)
         {
