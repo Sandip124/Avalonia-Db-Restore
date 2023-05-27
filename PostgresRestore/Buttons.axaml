@@ -1,0 +1,26 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="50"
+                    Margin="0 10" FontSize="16">
+                <StackPanel Orientation="Horizontal">
+                    <PathIcon Width="24" Height="24" Foreground="#fff"
+                              Data="{StaticResource Restore}" />
+                    <TextBlock VerticalAlignment="Center" Foreground="#fff" Margin="5 0"  FontFamily="Inter" x:Name="RestoreText">Restore</TextBlock>
+                </StackPanel>
+            </Button>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Button">
+        <Setter Property="Background" Value="#4263eb" />
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#364fc7" />
+    </Style>
+    <Style Selector="Button:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="#364fc7" />
+    </Style>
+</Styles>

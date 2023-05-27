@@ -9,7 +9,6 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using AvaloniaEdit.Highlighting;
 using MessageBox.Avalonia.Enums;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PostgresRestore.Constants;
 using PostgresRestore.Helper;
 using PostgresRestore.Validator;

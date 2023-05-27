@@ -3,7 +3,10 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="DatabaseRestorerMvvm/App.axaml" value="DatabaseRestorerMvvm/DatabaseRestorerMvvm.csproj" />
+        <entry key="DatabaseRestorerMvvm/MainWindow.axaml" value="DatabaseRestorerMvvm/DatabaseRestorerMvvm.csproj" />
         <entry key="PostgresRestore/App.axaml" value="PostgresRestore/PostgresRestore.csproj" />
+        <entry key="PostgresRestore/Buttons.axaml" value="PostgresRestore/PostgresRestore.csproj" />
         <entry key="PostgresRestore/Icons.axaml" value="PostgresRestore/PostgresRestore.csproj" />
         <entry key="PostgresRestore/MainWindow.axaml" value="PostgresRestore/PostgresRestore.csproj" />
         <entry key="PostgresRestore/Resources.axaml" value="PostgresRestore/PostgresRestore.csproj" />
